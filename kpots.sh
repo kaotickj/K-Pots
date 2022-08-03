@@ -42,11 +42,10 @@ initport()
 {
 #  PORT=$1 
   clear
-  figlet "Port $PORT" > $DIR/$PORT.txt
-  figlet "Powered by:" >> $DIR/$PORT.txt
-  figlet '  KPots  ' >> $DIR/$PORT.txt
+  echo "Port $PORT" > $DIR/$PORT.txt
+  echo "Powered by KPots" >> $DIR/$PORT.txt
   echo "" >> $DIR/$PORT.txt
-  echo "            🕵🔎 Courtesy of KaotickJ 👽" >> $DIR/$PORT.txt 
+  echo "🕵🔎 Courtesy of KaotickJ 👽" >> $DIR/$PORT.txt 
   echo "" >> $DIR/$PORT.txt
   echo "${GREEN}Finished ...."
   cat $DIR/$PORT.txt

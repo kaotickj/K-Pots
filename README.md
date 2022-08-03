@@ -48,4 +48,5 @@ sudo ./kpots.sh -d 22
 ```
  
 🕵🔎 Courtesy of KaotickJ 👽
+
 ![Hack The Box](http://www.hackthebox.eu/badge/image/476578)

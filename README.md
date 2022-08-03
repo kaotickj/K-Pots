@@ -3,7 +3,7 @@
 ![Logo](https://kdgwebsolutions.com/assets/img/kpots.png)
 # K Pots
 ## 🕵🔎 By KaotickJ 👽 
-KPots is a simple honeypots system to capture and log traffic to specified ports. Requires Netcat or ncat.
+KPots is a simple honeypots system to capture and log traffic to specified ports.
 
 Syntax: kpots.sh [-h|-d|-i|-s|-v] <PORT>
 
@@ -14,3 +14,23 @@ Syntax: kpots.sh [-h|-d|-i|-s|-v] <PORT>
 *   -i <PORT> Generates a new banner for port specified .
 *   -s <PORT> To monitor specified port in simple mode.
 *   -v <PORT> To monitor soecified port in verbose mode.
+### Usage
+First, you'll need a banner for the port.  K-pots displays the banner text at $DIR/$PORT.txt on connect. 
+To generate a new banner for a port, for example, ssh on port 22  simply run:
+```sh
+sudo ./kpots.sh -i 22
+```
+To monitor port 22 for incoming connections and log traffic to 22.log:
+```sh
+sudo ./kpots.sh -s 22
+```
+To monitor port 22 for incoming connections, display them in the terminal, and log traffic to $DIR/$PORT/long.log:
+```sh
+sudo ./kpots.sh -v 22
+```
+To delete logs for port 22:
+```sh
+sudo ./kpots.sh -d 22
+```
+
+

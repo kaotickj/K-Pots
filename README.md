@@ -17,11 +17,23 @@ Syntax: kpots.sh [-h|-d|-i|-s|-v] <PORT>
 ### Usage
 >  PLEASE NOTE:  K-Pots MUST be run with elevated privileges. Run as root or `sudo ./kpots.sh `
 
-First, you'll need a banner for the port.  K-pots displays the banner text at $DIR/$PORT.txt on connect. 
+First, you'll need a banner for the port.  K-pots displays the banner text at $DIR/$PORT.txt on connect. The banner genrator relies on figlet: http://www.figlet.org/ , though no extra fonts are required as it uses the default figlet font.
+
 To generate a new banner for a port, for example, ssh on port 22  simply run:
 ```sh
 sudo ./kpots.sh -i 22
 ```
+Or create 22.txt and save your own banner text into it:
+```sh
+touch 22.txt
+nano 22.txt
+```
+#### A more serious and realistic ssh banner:
+>The authenticity of host '10.0.2.41 (10.0.2.41)' can't be established.
+ED25519 key fingerprint is SHA256:1r8zd7E92Jq4/fDkEXzkFJ5RlQ25g1dPA5edubA1L/U.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])?
+
 To monitor port 22 for incoming connections and log traffic to 22.log:
 ```sh
 sudo ./kpots.sh -s 22
@@ -34,7 +46,7 @@ To delete logs for port 22:
 ```sh
 sudo ./kpots.sh -d 22
 ```
-
+ ```sh                                  
 🕵🔎 Courtesy of KaotickJ 👽
-
+```
 ![Hack The Box](http://www.hackthebox.eu/badge/image/476578)

@@ -34,7 +34,7 @@ To delete logs for port 22:
 ```sh
 sudo ./kpots.sh -d 22
 ```
- ```sh                                  
+
 🕵🔎 Courtesy of KaotickJ 👽
-```
+
 ![Hack The Box](http://www.hackthebox.eu/badge/image/476578)

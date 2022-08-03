@@ -5,7 +5,7 @@
 ## 🕵🔎 By KaotickJ 👽 
 KPots is a simple honeypots system to capture and log traffic to specified ports.
 
-Syntax: kpots.sh [-h|-d|-i|-s|-v] \<PORT\>
+Syntax: kpots.sh [-h|-d|-i|-s|-v] <PORT>
 
    options:
    -------------------------------------------
@@ -15,6 +15,8 @@ Syntax: kpots.sh [-h|-d|-i|-s|-v] \<PORT\>
 *   -s <PORT> To monitor specified port in simple mode.
 *   -v <PORT> To monitor soecified port in verbose mode.
 ### Usage
+>  PLEASE NOTE:  K-Pots MUST be run with elevated privileges. Run as root or `sudo ./kpots.sh `
+
 First, you'll need a banner for the port.  K-pots displays the banner text at $DIR/$PORT.txt on connect. 
 To generate a new banner for a port, for example, ssh on port 22  simply run:
 ```sh
@@ -32,5 +34,7 @@ To delete logs for port 22:
 ```sh
 sudo ./kpots.sh -d 22
 ```
-
-
+ ```sh                                  
+🕵🔎 Courtesy of KaotickJ 👽
+```
+![Hack The Box](http://www.hackthebox.eu/badge/image/476578)

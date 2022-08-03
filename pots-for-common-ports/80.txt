@@ -45,7 +45,7 @@
       <div class="row marketing">
         <div class="col-lg-6">
           <h4>Oh where have you been Billy Boy?<br></h4>
-          <p>Billy is getting up there in years, and I still hasn't sown his oats.&nbsp; He's been a courtin - with his buddy froggy.&nbsp; THey are both seeking wives, to be the joy to their worlds.&nbsp; You guessed it!&nbsp; Froggy's real name is Jeremiah!<br></p>
+          <p>Billy is getting up there in years, and he still hasn't sown his oats.&nbsp; He's been a courtin - with his buddy froggy.&nbsp; THey are both seeking wives, to be the joy to their worlds.&nbsp; You guessed it!&nbsp; Froggy's real name is Jeremiah!<br></p>
 
           <h4>Where Have you Been Charming Billy?<br></h4>
           <p>He's been to seek a wife... She's the joy of his life.&nbsp; She's a young thing - but she really can't leave her mother.<br></p>
@@ -65,6 +65,48 @@
           <p>But the People let me down - so I turned the other way and I carried on anyhow.&nbsp; That's why I'm tellin you - I just want to celebrate another day of livin. &nbsp; <br></p>
         </div>
       </div>
+	<h3>Contact<i style="display:none!important;width:0%;"> Form</i> Billy Boy</h3>
+	<form>
+	  <div class="form-group row">
+	    <label for="name" class="col-4 col-form-label">Your name</label> 
+	    <div class="col-8">
+	      <div class="input-group">
+		<div class="input-group-prepend">
+		  <div class="input-group-text">
+		    <i class="fa fa-address-card"></i>
+		  </div>
+		</div> 
+	      <input id="name" name="name" placeholder="First Last" type="text" class="form-control" aria-describedby="nameHelpBlock">
+	    </div>
+           <span id="nameHelpBlock" class="form-text text-muted">Enter your full name</span>
+	  </div>
+	 </div> 
+     <div class="form-group row">
+	  <label for="email" class="col-4 col-form-label">Your email</label> 
+	  <div class="col-8">
+	   <div class="input-group">
+	     <div class="input-group-prepend">
+	       <div class="input-group-text">
+		    <i class="fa fa-address-card"></i>
+		  </div>
+		</div> 
+		<input id="email" name="email" type="text" placeholder="user@domain.tld" class="form-control" aria-describedby="emailHelpBlock">
+	      </div> 
+	      <span id="emailHelpBlock" class="form-text text-muted">Enter your email to subscribe</span>
+	    </div>
+	  </div>
+	  <div class="form-group row">
+	    <label for="message" class="col-4 col-form-label">Message</label> 
+	    <div class="col-8">
+	      <textarea id="message" name="message" cols="40" rows="5" class="form-control"></textarea>
+	    </div>
+	  </div> 
+	  <div class="form-group row">
+	    <div class="offset-4 col-8">
+	      <button name="submit" type="submit" class="btn btn-primary">Submit</button>
+	    </div>
+	  </div>
+	</form>
 
       <footer class="footer">
         <p spellcheckker="false" contenteditable="true">© Billy Boy and Friends 2017. All rights reserved<br></p>

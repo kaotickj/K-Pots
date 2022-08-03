@@ -1,5 +1,12 @@
 #! /bin/bash
-DIR=$(pwd)
+# Script: kpots.sh v 0.1
+# Author: kaotickj
+# Website: kdgwebsolutions.com
+
+###################
+#  VARS
+###################
+DIR=$(pwd)'/pots'
 PORT=$2 
 
 ####################

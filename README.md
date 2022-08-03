@@ -9,8 +9,8 @@ Syntax: kpots.sh [-h|-d|-i|-s|-v] <PORT>
 
    options:
    -------------------------------------------
-   -h help message
-   -d <PORT> Deletes logs for specified port.
-   -i <PORT> Generates a new banner for port specified .
-   -s <PORT> To monitor specified port in simple mode.
-   -v <PORT> To monitor soecified port in verbose mode.
+*   -h help message
+*   -d <PORT> Deletes logs for specified port.
+*   -i <PORT> Generates a new banner for port specified .
+*   -s <PORT> To monitor specified port in simple mode.
+*   -v <PORT> To monitor soecified port in verbose mode.

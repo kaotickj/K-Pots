@@ -155,7 +155,7 @@ echo
    echo " ${YELLOW}-d ${YELLOW}<PORT>${BLUE} Deletes logs for specified port."
    echo " ${YELLOW}-i ${YELLOW}<PORT>${BLUE} Generates a new banner for port specified ."
    echo " ${YELLOW}-S ${YELLOW}<PORT>${BLUE} To monitor specified port in simple mode"
-   echo " ${YELLOW}-v ${YELLOW}<PORT>${BLUE} To monitor soecified port in verbose mode"
+   echo " ${YELLOW}-v ${YELLOW}<PORT>${BLUE} To monitor specified port in verbose mode"
    echo 
 #   sleep 3	
 }
@@ -189,7 +189,7 @@ echo
    echo " ${YELLOW}-d ${YELLOW}<PORT>${BLUE} Deletes logs for specified port."
    echo " ${YELLOW}-i ${YELLOW}<PORT>${BLUE} Generates a new banner for port specified ."
    echo " ${YELLOW}-S ${YELLOW}<PORT>${BLUE} To monitor specified port in simple mode"
-   echo " ${YELLOW}-v ${YELLOW}<PORT>${BLUE} To monitor soecified port in verbose mode"
+   echo " ${YELLOW}-v ${YELLOW}<PORT>${BLUE} To monitor specified port in verbose mode"
    echo 
    echo 
 

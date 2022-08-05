@@ -20,9 +20,7 @@
 ### Usage
 >  PLEASE NOTE:  K-Pots MUST be run with elevated privileges. Run as root or `sudo ./kpots.sh `
 
-First, you'll need a banner for the port.  K-pots displays the banner text at $DIR/$PORT.txt on connect. The banner genrator relies on figlet: http://www.figlet.org/ , though no extra fonts are required as it uses the default figlet font.
-
-To generate a new banner for a port, for example, ssh on port 22  simply run:
+First, you'll need a banner for the port.  K-pots displays the banner text at $DIR/$PORT.txt on connect. To generate a new banner for a port, for example, ssh on port 22  simply run:
 ```sh
 sudo ./kpots.sh -b 22
 ```

@@ -69,7 +69,7 @@ logreader()
 	"Archive Logs")
           mkdir -p $DIR/archive	
 	  echo "${YELLOW}--->Archiving Logs ....."
-	  if [ -f $DIR/?-mode.log ]
+	  if [ -f pots/s-mode.log ] || [ -f pots/v-mode.log ]
 	    then
 	      tar -cvzf kpots_logs_$now.tar.gz pots/*.log
               mv kpots_logs_$now.tar.gz $DIR/archive/kpots_logs_$now.tar.gz

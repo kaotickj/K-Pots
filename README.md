@@ -85,7 +85,7 @@ sudo ./kpots.sh -l
 Choose option 2 - "Logs From Verbose Mode"
 
 ### Monitor Only Mode
-> Monitor Only Mode listens for connections and displays them in the terminal.  It does not output any logs. It's purpose is for real-time monitoring only.
+> Monitor Only Mode listens for connections and displays them in the terminal.  It does not output any logs. Its purpose is for real-time monitoring only.
 
 To monitor port 22 for incoming connections and display them in the terminal, but create no logs:
 ```sh

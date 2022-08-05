@@ -25,9 +25,9 @@ First, you'll need a banner for the port.  K-pots displays the banner text at $D
 sudo ./kpots.sh -b 22
 ```
 You will have options to use the default banner template:
-> Port $PORT
-  Powered by KPots
-  🕵🔎 Courtesy of KaotickJ 👽
+> * Port $PORT
+* Powered by KPots
+* 🕵🔎 Courtesy of KaotickJ 👽
 
 Or to create a custom one. For more authenticity to the *attacker, it is best to use a custom banner specifically mimmicking any services tied to the given port. 
 
@@ -83,6 +83,15 @@ cat <./pots/v-mode.log | bae64 -d
 sudo ./kpots.sh -l
 ```
 Choose option 2 - "Logs From Verbose Mode"
+
+### Monitor Only Mode
+> Monitor Only Mode listens for connections and displays them in the terminal.  It does not output any logs. It's purpose is for real-time monitoring only.
+
+To monitor port 22 for incoming connections and display them in the terminal, but create no logs:
+```sh
+sudo ./kpots.sh -v 22
+```
+
 
  
 🕵🔎 Courtesy of KaotickJ 👽

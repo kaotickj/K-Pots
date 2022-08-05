@@ -149,17 +149,16 @@ bannergen()
 ####################
 simple()
 {
-  filename=$Dir/s-mode.log
-  if [ ! -f $filename ]
+  if [ ! -f pots/s-mode.log ]
     then
-      touch $filename
+      touch pots/s-mode.log
   fi
-  filename=$Dir/$PORT.txt
-  if [ ! -f $filename ]
-    then
-      echo "${RED}  💀 You don't have a banner for port $PORT 💀"
-      echo "${RED}     sudo ./kpots.sh -b $PORT to create one."
-      exit 1
+  if [ ! -f pots/$PORT.txt ]
+    then 
+      echo "${RED}  💀 You don't have a banner for port $PORT sudo ./kpots.sh -b $PORT to create one. 💀"
+      exit 
+   else
+      echo -e ${YELLOW}'---> Starting ...'     
   fi
   echo "${BLUE}-----------------------------------------------------"
   echo "${BLUE}         📉    Simple Mode Monitoring    📉          "
@@ -193,17 +192,16 @@ simple()
 ####################
 verbose()
 {
-  filename=$Dir/v-mode.log
-  if [ ! -f $filename ]
+  if [ ! -f pots/v-mode.log ]
     then
-      touch $filename
+      touch pots/v-mode.log
   fi
-  filename=$Dir/$PORT.txt
-  if [ ! -f $filename ]
-    then
-      echo "${RED}  💀 You don't have a banner for port $PORT"
-      echo "${RED}     sudo ./kpots.sh -b $PORT to create one. 💀"
-      exit 1
+  if [ ! -f pots/$PORT.txt ]
+    then 
+      echo "${RED}  💀 You don't have a banner for port $PORT sudo ./kpots.sh -b $PORT to create one. 💀"
+      exit 
+   else
+      echo -e ${YELLOW}'---> Starting ...'     
   fi
   echo "${BLUE}-----------------------------------------------------"
   echo "${BLUE}          📈    Verbose Mode Moitoring    📈         "

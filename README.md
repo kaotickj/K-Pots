@@ -10,13 +10,13 @@
 
    options:
    -------------------------------------------
-   -h Show this help message
-   -d <PORT> Deletes ALL logs for ALL ports.
-   -b <PORT> Generates a new banner for port specified .
-   -m <PORT> Only monitor specified port. No logs
-   -l <PORT> Read the logs
-   -s <PORT> To monitor specified port in simple mode
-   -v <PORT> To monitor specified port in verbose mode
+   * -h Show this help message
+   * -d <PORT> Deletes ALL logs for ALL ports.
+   * -b <PORT> Generates a new banner for port specified .
+   * -m <PORT> Only monitor specified port. No logs
+   * -l <PORT> Read the logs
+   * -s <PORT> To monitor specified port in simple mode
+   * -v <PORT> To monitor specified port in verbose mode
 ### Usage
 >  PLEASE NOTE:  K-Pots MUST be run with elevated privileges. Run as root or `sudo ./kpots.sh `
 

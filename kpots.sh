@@ -349,9 +349,9 @@ do
        v) verbose
          ;;
        m) nologs
-	 ;; 
+		 ;; 
        l) logreader
-	 ;; 
+		 ;; 
        *) 
          echo ${RED}
          echo "💀 invalid option ./kpots.sh -h for help 💀"

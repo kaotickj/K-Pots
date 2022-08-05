@@ -26,29 +26,66 @@ To generate a new banner for a port, for example, ssh on port 22  simply run:
 ```sh
 sudo ./kpots.sh -b 22
 ```
-Or create 22.txt and save your own banner text into it:
+You will have options to use the default banner template:
+> Port $PORT
+  Powered by KPots
+  🕵🔎 Courtesy of KaotickJ 👽
+
+Or to create a custom one. For more authenticity to the *attacker, it is best to use a custom banner specifically mimmicking any services tied to the given port. 
+
+##### Manual Banner Creation 
+If you don't want to use the generator, create port#.txt and save your own banner text into it:
 ```sh
-touch 22.txt
-nano 22.txt
+touch port#.txt
+nano port#.txt
 ```
-#### A more serious and realistic ssh banner:
+#### A realistic ssh banner:
 >The authenticity of host '10.0.2.41 (10.0.2.41)' can't be established.
 ED25519 key fingerprint is SHA256:1r8zd7E92Jq4/fDkEXzkFJ5RlQ25g1dPA5edubA1L/U.
 This key is not known by any other names
 Are you sure you want to continue connecting (yes/no/[fingerprint])?
 
-To monitor port 22 for incoming connections and log traffic to 22.log:
+## Monitor Modes
+Kpots has 3 monitoring modes, Simple, Verbose, and Monitor Only
+#### Simple Monitoring Mode
+
+> Simple Monitoring Mode listens for connections and logs output to a file.  It does not display connections in the terminal, and is useful for monitoring ports in the background.  Logs are stored in ./pots/s-mode.log and are base64 encoded to reduce filesize.
+
+To monitor ssh port 22 for incoming connections and log traffic to ./pots/s-mode.log:
 ```sh
 sudo ./kpots.sh -s 22
 ```
-To monitor port 22 for incoming connections, display them in the terminal, and log traffic to $DIR/$PORT/long.log:
+To view Simple Mode logs:
+##### Method 1
 ```sh
-sudo ./kpots.sh -v 22
+cat <./pots/s-mode.log | bae64 -d
 ```
-To view logs:
+
+##### Method 2
 ```sh
 sudo ./kpots.sh -l
 ```
+Choose option 1 - "Logs From Simple Mode"
+
+### Verbose Monitoring Mode
+> Verbose Monitoring Mode listens for connections displays them in the terminal, and logs output to a file. Logs are stored in ./pots/v-mode.log and are base64 encoded to reduce filesize.
+
+To monitor port 22 for incoming connections, display them in the terminal, and log traffic to ./pots/v-mode.log:
+```sh
+sudo ./kpots.sh -v 22
+```
+To view Verbose Mode logs:
+##### Method 1
+```sh
+cat <./pots/v-mode.log | bae64 -d
+```
+
+##### Method 2
+```sh
+sudo ./kpots.sh -l
+```
+Choose option 2 - "Logs From Verbose Mode"
+
  
 🕵🔎 Courtesy of KaotickJ 👽
 

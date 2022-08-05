@@ -296,7 +296,7 @@ echo
    echo " ${YELLOW}-h ${BLUE}Shows this help message"
    echo " ${YELLOW}-d ${YELLOW}<PORT>${BLUE} Deletes ALL logs for ALL ports."
    echo " ${YELLOW}-b ${YELLOW}<PORT>${BLUE} Generates a new banner for port specified ."
-   echo " ${YELLOW}-S ${YELLOW}<PORT>${BLUE} To monitor specified port in simple mode"
+   echo " ${YELLOW}-s ${YELLOW}<PORT>${BLUE} To monitor specified port in simple mode"
    echo " ${YELLOW}-v ${YELLOW}<PORT>${BLUE} To monitor specified port in verbose mode"
    echo 
 #   sleep 3	
@@ -332,7 +332,7 @@ echo
    echo " ${YELLOW}-b ${YELLOW}<PORT>${BLUE} Generates a new banner for port specified ."
    echo " ${YELLOW}-m ${YELLOW}<PORT>${BLUE} Only monitor specified port. No logs"
    echo " ${YELLOW}-l ${YELLOW}<PORT>${BLUE} Read the logs"
-   echo " ${YELLOW}-S ${YELLOW}<PORT>${BLUE} To monitor specified port in simple mode"
+   echo " ${YELLOW}-s ${YELLOW}<PORT>${BLUE} To monitor specified port in simple mode"
    echo " ${YELLOW}-v ${YELLOW}<PORT>${BLUE} To monitor specified port in verbose mode"
    echo 
    echo 
@@ -361,4 +361,3 @@ do
     esac
 done
 tput sgr0 
-

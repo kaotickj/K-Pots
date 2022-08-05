@@ -6,6 +6,7 @@
 ###################
 #  VARS
 ###################
+now=$(date +"%m_%d_%Y")
 DIR=$(pwd)'/pots'
 PORT=$2 
 
@@ -36,91 +37,222 @@ UNDERLINED="${C}[5m"
 ITALIC="${C}[3m"
 
 ###########################
-#  INITIALIZE NEW PORT
+#  LOG READER
 ###########################
-initport()
+logreader()
 {
-#  PORT=$1 
-  clear
-  echo "Port $PORT" > $DIR/$PORT.txt
-  echo "Powered by KPots" >> $DIR/$PORT.txt
-  echo "" >> $DIR/$PORT.txt
-  echo "🕵🔎 Courtesy of KaotickJ 👽" >> $DIR/$PORT.txt 
-  echo "" >> $DIR/$PORT.txt
-  echo "${GREEN}Finished ...."
-  cat $DIR/$PORT.txt
-  sleep 2
+  echo "${BLUE}-----------------------------------------------------"
+  echo "${BLUE}          🔎        Reading Logs         🔎          "
+  echo "${BLUE}-----------------------------------------------------"
+  echo ${LIGHT_MAGENTA}
+  PS3="${YELLOW}What do you want to do? (5=QUIT)" 
+  options=("Logs From Simple Mode" "Logs From Verbose Mode" "Archive Logs" "This Menu" "Quit")
+  select opt in "${options[@]}"
+  do
+    case $opt in
+	"Logs From Simple Mode")
+	  if [ -f $DIR/s-mode.log ]
+	    then
+              cat <$DIR/s-mode.log | base64 -d
+	    else
+	      echo -e ${RED}'---> No simple mode logs yet'     
+	  fi
+	;;
+	"Logs From Verbose Mode")
+	  if [ -f $DIR/v-mode.log ]
+	    then
+              cat <$DIR/v-mode.log | base64 -d
+	    else
+	      echo -e ${RED}'---> No verbose mode logs yet'     
+	  fi
+	;;
+	"Archive Logs")
+          mkdir -p $DIR/archive	
+	  echo "${YELLOW}--->Archiving Logs ....."
+	  if [ -f $DIR/?-mode.log ]
+	    then
+	      tar -cvzf kpots_logs_$now.tar.gz pots/*.log
+              mv kpots_logs_$now.tar.gz $DIR/archive/kpots_logs_$now.tar.gz
+              rm $DIR/*.log
+	      echo
+	      echo "${GREEN}--->Finished archiving. Moved to $DIR/archive/kpots_logs_$now.tar.gz"
+	    else
+	      echo -e ${RED}'---> Nothing to do'     
+	  fi
+	;;
+	"This Menu")
+	   clear		
+	   logreader
+	;;   
+	"Quit")
+	  clear
+	  echo "${YELLOW}Goodbye"
+	  exit;;
+    esac
+  done  	
 }
 
+###########################
+# PORT BANNER GENERATOR
+###########################
+bannergen()
+{
+  echo "${BLUE}-----------------------------------------------------"
+  echo "${BLUE}          ⚙️    Port Banner Generator    ⚙️          "
+  echo "${BLUE}-----------------------------------------------------"
+  echo ${LIGHT_MAGENTA}
+  if [ -z "${PORT}" ];
+    then	
+      read -p 'Set Port # to generate banner for ' PORT
+  fi 
+  PS3="${YELLOW}Type of banner to generate? (3=QUIT)" 
+
+  options=("Custom_Banner" "Default_Banner" "Quit")
+  select opt in "${options[@]}"
+  do
+    case $opt in
+      "Custom_Banner")
+	read -p 'Set custom banner text ' BANNER
+        echo $BANNER > $DIR/$PORT.txt
+        echo "${YELLOW}Finished. Banner for port $PORT set to:${GREEN}"
+        echo
+        cat $DIR/$PORT.txt
+        sleep 2
+	echo "Your banner for port $PORT is set.  You're ready to monitor it."	
+	echo "${DG}-->sudo ./kpots.sh [-s|-v] $PORT to start monitoring."	
+	exit
+      ;;
+      "Default_Banner")
+        echo "Port $PORT" > $DIR/$PORT.txt
+        echo "Powered by KPots" >> $DIR/$PORT.txt
+        echo "" >> $DIR/$PORT.txt
+        echo "🕵🔎 Courtesy of KaotickJ 👽" >> $DIR/$PORT.txt 
+        echo "" >> $DIR/$PORT.txt
+        echo "${YELLOW}Finished. Banner for port $PORT set to:${GREEN}"
+	echo
+        cat $DIR/$PORT.txt
+	sleep 2
+	echo "Your banner for port $PORT is set.  You're ready to monitor it."
+	echo "${DG}-->sudo ./kpots.sh [-s|-v] $PORT to start monitoring."
+	exit	
+      ;;
+      "Quit")
+	exit
+      ;;  
+    esac
+  done		
+  clear
+}
 
 ####################
 #  SIMPLE
 ####################
 simple()
 {
-#  PORT=$1
+  filename=$Dir/s-mode.log
+  if [ ! -f $filename ]
+    then
+      touch $filename
+  fi
+  filename=$Dir/$PORT.txt
+  if [ ! -f $filename ]
+    then
+      echo "${RED}  💀 You don't have a banner for port $PORT 💀"
+      echo "${RED}     sudo ./kpots.sh -b $PORT to create one."
+      exit 1
+  fi
+  echo "${BLUE}-----------------------------------------------------"
+  echo "${BLUE}         📉    Simple Mode Monitoring    📉          "
+  echo "${BLUE}-----------------------------------------------------"
+  echo ${LIGHT_MAGENTA}
+  if [ -z "${PORT}" ];
+    then	
+      read -p 'Set Port # to monitor ' PORT
+  fi 
   echo -ne ${YELLOW}'Monitoring Port ' $PORT'\r'
-  sleep .2
-  echo -ne ${YELLOW}'MOnitoring Port ' $PORT'\r'
-  sleep .2
-  echo -ne ${YELLOW}'MoNitoring Port ' $PORT'\r'
-  sleep .2
-  echo -ne ${YELLOW}'MonItoring Port ' $PORT'\r'
-  sleep .2
-  echo -ne ${YELLOW}'MoniToring Port ' $PORT'\r'
-  sleep .2
-  echo -ne ${YELLOW}'MonitOring Port ' $PORT'\r'
-  sleep .2
-  echo -ne ${YELLOW}'MonitoRing Port ' $PORT'\r'
-  sleep .2
-  echo -ne ${YELLOW}'MonitorIng Port ' $PORT'\r'
-  sleep .2
-  echo -ne ${YELLOW}'MonitoriNg Port ' $PORT'\r'
-  sleep .2
-  echo -ne ${YELLOW}'MonitorinG Port ' $PORT'\r'
-  sleep .2
-  echo -ne ${YELLOW}'MonitorinG Port ' $PORT'\r'
-  sleep .2
-  echo -ne ${YELLOW}'MonitorinG POrt ' $PORT'\r'
-  sleep .2
-  echo -ne ${YELLOW}'MonitorinG PoRt ' $PORT'\r'
-  sleep .2
-  echo -ne ${YELLOW}'MonitorinG PorT ' $PORT'\r'
-  sleep .2
+  sleep .5
   echo -ne ${DG}'---> Monitoring Port ' $PORT'\n'
-  echo ${DG}'---> Logs saving to ' $DIR/$PORT.log''
+  echo -e "" | base64 >>$DIR/s-mode.log 
+  echo -e "HoneyPot Started on port $PORT $(date)." | base64 >>$DIR/s-mode.log 
+  echo ${DG}'---> Logs saving to ' $DIR/s-mode.log''
   echo '---> (hit ctrl c twice to end)'
   sleep .2
-
   while :
     do
       echo "" >>$DIR/$PORT.log;
       sudo nc -lvnp $PORT < $DIR/$PORT.txt 1>>$DIR/$PORT.log 2>>$DIR/$PORT.log;
       echo $(date) >> $DIR/$PORT.log;
+      cat $DIR/$PORT.log | base64 >>$DIR/s-mode.log
+      rm $DIR/$PORT.log	
       sleep 2
     done
 }
+
 ####################
 #  VERBOSE
 ####################
 verbose()
 {
-#  PORT=$1 
-#  clear
-  mkdir -p $DIR/$PORT/
-  touch $DIR/$PORT/long.log
-  echo -e "${YELLOW}Logging to ${DG}$DIR/$PORT/long.log"
+  filename=$Dir/v-mode.log
+  if [ ! -f $filename ]
+    then
+      touch $filename
+  fi
+  filename=$Dir/$PORT.txt
+  if [ ! -f $filename ]
+    then
+      echo "${RED}  💀 You don't have a banner for port $PORT"
+      echo "${RED}     sudo ./kpots.sh -b $PORT to create one. 💀"
+      exit 1
+  fi
+  echo "${BLUE}-----------------------------------------------------"
+  echo "${BLUE}          📈    Verbose Mode Moitoring    📈         "
+  echo "${BLUE}-----------------------------------------------------"
+  echo ${LIGHT_MAGENTA}
+  if [ -z "${PORT}" ];
+    then	
+      read -p 'Set Port # to monitor ' PORT
+  fi 
+  echo -e "${YELLOW}Logging to ${DG}$DIR/v-mode.log"
   echo -e "${GREEN}---> HoneyPot Started on port $PORT $(date)."
-  echo -e "${GREEN}HoneyPot Started on port $PORT $(date)." >>$DIR/$PORT/long.log 
+  echo -e "" >>$DIR/v-mode.log 
+  echo -e "HoneyPot Started on port $PORT $(date)." | base64 >>$DIR/v-mode.log 
   while :
     do
       echo "" >$DIR/$PORT.log;
       sudo nc -lvnp $PORT < $DIR/$PORT.txt 1>>$DIR/$PORT.log 2>>$DIR/$PORT.log;
       echo $(date) >> $DIR/$PORT.log;
-      cat $DIR/$PORT.log >>$DIR/$PORT/long.log
+      cat $DIR/$PORT.log | base64 >>$DIR/v-mode.log
       echo
       echo "${RED}Hit from:${DG}"
       cat $DIR/$PORT.log
+      rm $DIR/$PORT.log
+      sleep 2
+    done
+}
+
+#########################
+# MONITORING ONLY
+#########################
+nologs()
+{
+  echo "${BLUE}-----------------------------------------------------"
+  echo "${BLUE}         👓    No Logs / Monitor Only    👓          "
+  echo "${BLUE}-----------------------------------------------------"
+  echo ${LIGHT_MAGENTA}
+  if [ -z "${PORT}" ];
+    then	
+      read -p 'Set Port # to monitor ' PORT
+  fi 
+  echo -e "${GREEN}---> HoneyPot Started on port $PORT $(date)."
+  while :
+    do
+      echo
+      sudo nc -lvnp $PORT < $DIR/$PORT.txt 1>>$DIR/$PORT.log 2>>$DIR/$PORT.log;
+      echo "${RED}Hit from:${DG}"
+      cat $DIR/$PORT.log
+      rm $DIR/$PORT.log
+      echo
       sleep 2
     done
 }
@@ -130,11 +262,15 @@ verbose()
 #########################
 delete()
 {
-  rm -R $DIR/$PORT
-  rm $DIR/$PORT.log
+  if [ -z "${PORT}" ];
+   then	
+     read -p #'Set Port # to monitor ' PORT
+ fi 
+ rm $DIR/*.log
   sleep 1
-  echo "${DG}--->$DIR/$PORT/*.* deleted"
+  echo "${DG}--->$DIR/*.log deleted"
 }
+
 #########################
 #  HELP
 #########################
@@ -153,13 +289,13 @@ echo
                  
 echo " ${BLUE}KPots is a simple honeypots system to capture and log traffic to specified ports."
 echo
-   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-d|-i|-s|-v] ${YELLOW}<PORT>"
+   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-d|-b|-l|-s|-v] ${YELLOW}<PORT>"
    echo ${GREEN}
    echo " options:"
    echo " -------------------------------------------"
    echo " ${YELLOW}-h ${BLUE}Shows this help message"
-   echo " ${YELLOW}-d ${YELLOW}<PORT>${BLUE} Deletes logs for specified port."
-   echo " ${YELLOW}-i ${YELLOW}<PORT>${BLUE} Generates a new banner for port specified ."
+   echo " ${YELLOW}-d ${YELLOW}<PORT>${BLUE} Deletes ALL logs for ALL ports."
+   echo " ${YELLOW}-b ${YELLOW}<PORT>${BLUE} Generates a new banner for port specified ."
    echo " ${YELLOW}-S ${YELLOW}<PORT>${BLUE} To monitor specified port in simple mode"
    echo " ${YELLOW}-v ${YELLOW}<PORT>${BLUE} To monitor specified port in verbose mode"
    echo 
@@ -187,31 +323,37 @@ echo
                  
 echo " ${BLUE}KPots is a simple honeypots system to capture and log traffic to specified ports."
 echo
-   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-d|-i|-s|-v] ${YELLOW}<PORT>"
+   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-d|-b|-m|-l|-s|-v] ${YELLOW}<PORT>"
    echo ${GREEN}
    echo " options:"
    echo " -------------------------------------------"
    echo " ${YELLOW}-h ${BLUE}Show this help message"
-   echo " ${YELLOW}-d ${YELLOW}<PORT>${BLUE} Deletes logs for specified port."
-   echo " ${YELLOW}-i ${YELLOW}<PORT>${BLUE} Generates a new banner for port specified ."
+   echo " ${YELLOW}-d ${YELLOW}<PORT>${BLUE} Deletes ALL logs for ALL ports."
+   echo " ${YELLOW}-b ${YELLOW}<PORT>${BLUE} Generates a new banner for port specified ."
+   echo " ${YELLOW}-m ${YELLOW}<PORT>${BLUE} Only monitor specified port. No logs"
+   echo " ${YELLOW}-l ${YELLOW}<PORT>${BLUE} Read the logs"
    echo " ${YELLOW}-S ${YELLOW}<PORT>${BLUE} To monitor specified port in simple mode"
    echo " ${YELLOW}-v ${YELLOW}<PORT>${BLUE} To monitor specified port in verbose mode"
    echo 
    echo 
 
-while getopts ":h?:d?:i?:s?:v?" opt; 
+while getopts ":h?:d?:b?:m?:l?:s?:v?" opt; 
 do
   case "$opt" in
        h) Help
          exit;;
        d) delete
          ;;  
-       i) initport
+       b) bannergen
          ;;
        s) simple
          ;;
        v) verbose
          ;;
+       m) nologs
+	 ;; 
+       l) logreader
+	 ;; 
        *) 
          echo ${RED}
          echo "💀 invalid option ./kpots.sh -h for help 💀"
@@ -219,3 +361,4 @@ do
     esac
 done
 tput sgr0 
+

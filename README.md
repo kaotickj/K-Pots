@@ -3,25 +3,28 @@
 ![Logo](https://kdgwebsolutions.com/assets/img/kpots.png)
 # K Pots
 ## 🕵🔎 By KaotickJ 👽 
-KPots is a simple honeypots system to capture and log traffic to specified ports.
 
-Syntax: kpots.sh [-h|-d|-i|-s|-v] <PORT>
+ KPots is a simple honeypots system to capture and log traffic to specified ports.
+
+ Syntax: kpots.sh [-h|-d|-b|-m|-l|-s|-v] <PORT>
 
    options:
    -------------------------------------------
-*   -h help message
-*   -d <PORT> Deletes logs for specified port.
-*   -i <PORT> Generates a new banner for port specified .
-*   -s <PORT> To monitor specified port in simple mode.
-*   -v <PORT> To monitor soecified port in verbose mode.
+   -h Show this help message
+   -d <PORT> Deletes ALL logs for ALL ports.
+   -b <PORT> Generates a new banner for port specified .
+   -m <PORT> Only monitor specified port. No logs
+   -l <PORT> Read the logs
+   -s <PORT> To monitor specified port in simple mode
+   -v <PORT> To monitor specified port in verbose mode
 ### Usage
 >  PLEASE NOTE:  K-Pots MUST be run with elevated privileges. Run as root or `sudo ./kpots.sh `
 
-First, you'll need a banner for the port.  K-pots displays the banner text at $DIR/$PORT.txt on connect. 
+First, you'll need a banner for the port.  K-pots displays the banner text at $DIR/$PORT.txt on connect. The banner genrator relies on figlet: http://www.figlet.org/ , though no extra fonts are required as it uses the default figlet font.
 
 To generate a new banner for a port, for example, ssh on port 22  simply run:
 ```sh
-sudo ./kpots.sh -i 22
+sudo ./kpots.sh -b 22
 ```
 Or create 22.txt and save your own banner text into it:
 ```sh
@@ -42,9 +45,9 @@ To monitor port 22 for incoming connections, display them in the terminal, and l
 ```sh
 sudo ./kpots.sh -v 22
 ```
-To delete logs for port 22:
+To view logs:
 ```sh
-sudo ./kpots.sh -d 22
+sudo ./kpots.sh -l
 ```
  
 🕵🔎 Courtesy of KaotickJ 👽

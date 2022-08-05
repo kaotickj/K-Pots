@@ -6,7 +6,7 @@
 
  KPots is a simple honeypots system to capture and log traffic to specified ports.
 
- Syntax: kpots.sh [-h|-d|-b|-m|-l|-s|-v] <PORT>
+ Syntax: kpots.sh [-h|-d|-b|-m|-l|-s|-v] \<PORT\>
 
    options:
    -------------------------------------------

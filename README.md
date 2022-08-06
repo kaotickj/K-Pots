@@ -4,7 +4,7 @@
 # K Pots
 ## 🕵🔎 By KaotickJ 👽 
 
- KPots is a simple honeypots system to capture, log, and ban traffic to specified ports.
+ KPots is a simple honeypots system to capture, log, and ban traffic to specified ports. Requires Netcat for monitoring and IPTables for banning.
 
  Syntax: kpots.sh [-h|-d|-b|-m|-l|-s|-v|-x] \<PORT\>
 

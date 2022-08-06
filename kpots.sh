@@ -42,11 +42,11 @@ ITALIC="${C}[3m"
 logreader()
 {
   echo "${BLUE}-----------------------------------------------------"
-  echo "${BLUE}          🔎        Reading Logs         🔎          "
+  echo "${BLUE}          📖        Reading Logs         📖          "
   echo "${BLUE}-----------------------------------------------------"
   echo ${LIGHT_MAGENTA}
-  PS3="${YELLOW}What do you want to do? (5=QUIT)" 
-  options=("Logs From Simple Mode" "Logs From Verbose Mode" "Archive Logs" "This Menu" "Quit")
+  PS3="${YELLOW}What do you want to do? (1=Simple 2=Verbose 3=Logs Menu 5=QUIT)" 
+  options=("Logs From Simple Mode" "Logs From Verbose Mode" "This Menu" "Archive Logs" "Quit")
   select opt in "${options[@]}"
   do
     case $opt in
@@ -66,6 +66,10 @@ logreader()
 	      echo -e ${RED}'---> No verbose mode logs yet'     
 	  fi
 	;;
+	"This Menu")
+	   clear		
+	   logreader
+	;;   
 	"Archive Logs")
           mkdir -p $DIR/archive	
 	  echo "${YELLOW}--->Archiving Logs ....."
@@ -80,10 +84,6 @@ logreader()
 	      echo -e ${RED}'---> Nothing to do'     
 	  fi
 	;;
-	"This Menu")
-	   clear		
-	   logreader
-	;;   
 	"Quit")
 	  clear
 	  echo "${YELLOW}Goodbye"
@@ -161,7 +161,7 @@ simple()
       echo -e ${YELLOW}'---> Starting ...'     
   fi
   echo "${BLUE}-----------------------------------------------------"
-  echo "${BLUE}         📉    Simple Mode Monitoring    📉          "
+  echo "${BLUE}         🤬    Simple Mode Monitoring    🤬          "
   echo "${BLUE}-----------------------------------------------------"
   echo ${LIGHT_MAGENTA}
   if [ -z "${PORT}" ];
@@ -204,7 +204,7 @@ verbose()
       echo -e ${YELLOW}'---> Starting ...'     
   fi
   echo "${BLUE}-----------------------------------------------------"
-  echo "${BLUE}          📈    Verbose Mode Moitoring    📈         "
+  echo "${BLUE}          🤑    Verbose Mode Moitoring    🤑         "
   echo "${BLUE}-----------------------------------------------------"
   echo ${LIGHT_MAGENTA}
   if [ -z "${PORT}" ];
@@ -235,7 +235,7 @@ verbose()
 nologs()
 {
   echo "${BLUE}-----------------------------------------------------"
-  echo "${BLUE}         👓    No Logs / Monitor Only    👓          "
+  echo "${BLUE}         😶    No Logs / Monitor Only    😶          "
   echo "${BLUE}-----------------------------------------------------"
   echo ${LIGHT_MAGENTA}
   if [ -z "${PORT}" ];
@@ -255,19 +255,74 @@ nologs()
     done
 }
 
+########################
+# PARSE AND SORT LOGS
+########################
+parselogs()
+{
+  if [ -f pots/s-mode.log ] || [ -f pots/v-mode.log ]
+    then
+      echo "${BLUE}-----------------------------------------------------"
+      echo "${BLUE}        📀    Parsing and Sorting Logs    📀         "
+      echo "${BLUE}-----------------------------------------------------"
+      cat <$DIR/s-mode.log | base64 -d > converted.log
+      cat converted.log | grep -oa '[1-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | sort | uniq > offender-ips.log
+      rm converted.log
+      cat <$DIR/v-mode.log | base64 -d >> converted.log
+      cat converted.log | grep -oa '[1-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | sort | uniq >> offender-ips.log
+      rm converted.log
+      cat offender-ips.log | sort | uniq > $DIR/offending-ips.log
+      rm offender-ips.log
+      echo "${RED}OFFENDING IPS: ${LIGHT_MAGENTA}"
+      cat $DIR/offending-ips.log
+      echo "${DG}---> Offending IPs saved to $DIR/offending-ips.log"
+      echo "${GREEN}Finshed parsing logs"
+      exit
+    else
+      echo -e ${RED}'---> Nothing to do'     
+  fi  
+}
+
+##########################
+# BAN OFFENDING IPS
+##########################
+
+ban()
+{
+  if [ -f pots/offending-ips.log ]
+    then
+      echo "${BLUE}-----------------------------------------------------"
+      echo "${BLUE}        🚫     Banning Offending IPs     🚫          "
+      echo "${BLUE}-----------------------------------------------------"
+      for i in `cat $DIR/offending-ips.log|grep -v "#"`
+      do
+        ADDR=$i
+        /sbin/iptables -t filter -I INPUT -s $ADDR -j DROP
+        /sbin/iptables -t filter -I OUTPUT -s $ADDR -j DROP
+        /sbin/iptables -t filter -I FORWARD -s $ADDR -j DROP
+        /sbin/iptables -t filter -I INPUT -d $ADDR -j REJECT
+        /sbin/iptables -t filter -I OUTPUT -d $ADDR -j REJECT
+        /sbin/iptables -t filter -I FORWARD -d $ADDR -j REJECT
+        echo "👊 Blocked all connections from $ADDR "
+      done
+    else
+      echo -e ${RED}'---> Nothing to do'     
+  fi
+}
+
 #########################
 #  DELETE
 #########################
-delete()
-{
-  if [ -z "${PORT}" ];
-   then	
-     read -p #'Set Port # to monitor ' PORT
- fi 
- rm $DIR/*.log
-  sleep 1
-  echo "${DG}--->$DIR/*.log deleted"
-}
+#delete()
+#{
+#  if [ -z "${PORT}" ];
+#   then	
+#     read -p #'Set Port # to monitor ' PORT
+# fi 
+# rm $DIR/*.log
+#  sleep 1
+#  echo "${DG}--->$DIR/*.log deleted"
+#}
 
 #########################
 #  HELP
@@ -287,15 +342,18 @@ echo
                  
 echo " ${BLUE}KPots is a simple honeypots system to capture and log traffic to specified ports."
 echo
-   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-d|-b|-l|-s|-v] ${YELLOW}<PORT>"
+   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-b|-l|-m|-p|-s|-v] ${YELLOW}<PORT>"
    echo ${GREEN}
    echo " options:"
    echo " -------------------------------------------"
-   echo " ${YELLOW}-h ${BLUE}Shows this help message"
-   echo " ${YELLOW}-d ${YELLOW}<PORT>${BLUE} Deletes ALL logs for ALL ports."
+   echo " ${YELLOW}-h ${BLUE}Show this help message"
    echo " ${YELLOW}-b ${YELLOW}<PORT>${BLUE} Generates a new banner for port specified ."
+   echo " ${YELLOW}-l ${BLUE} Read the logs"
+   echo " ${YELLOW}-m ${YELLOW}<PORT>${BLUE} Only monitor specified port. No logs"
+   echo " ${YELLOW}-p ${BLUE} Parse and sort ip addresses from logs"
    echo " ${YELLOW}-s ${YELLOW}<PORT>${BLUE} To monitor specified port in simple mode"
    echo " ${YELLOW}-v ${YELLOW}<PORT>${BLUE} To monitor specified port in verbose mode"
+   echo " ${YELLOW}-x ${BLUE} To ban offending IPs"
    echo 
 #   sleep 3	
 }
@@ -321,41 +379,48 @@ echo
                  
 echo " ${BLUE}KPots is a simple honeypots system to capture and log traffic to specified ports."
 echo
-   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-d|-b|-m|-l|-s|-v] ${YELLOW}<PORT>"
+   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-b|-l|-m|-p|-s|-v] ${YELLOW}<PORT>"
    echo ${GREEN}
    echo " options:"
    echo " -------------------------------------------"
    echo " ${YELLOW}-h ${BLUE}Show this help message"
-   echo " ${YELLOW}-d ${YELLOW}<PORT>${BLUE} Deletes ALL logs for ALL ports."
    echo " ${YELLOW}-b ${YELLOW}<PORT>${BLUE} Generates a new banner for port specified ."
+   echo " ${YELLOW}-l ${BLUE} Read the logs"
    echo " ${YELLOW}-m ${YELLOW}<PORT>${BLUE} Only monitor specified port. No logs"
-   echo " ${YELLOW}-l ${YELLOW}<PORT>${BLUE} Read the logs"
+   echo " ${YELLOW}-p ${BLUE} Parse and sort ip addresses from logs"
    echo " ${YELLOW}-s ${YELLOW}<PORT>${BLUE} To monitor specified port in simple mode"
    echo " ${YELLOW}-v ${YELLOW}<PORT>${BLUE} To monitor specified port in verbose mode"
-   echo 
+   echo " ${YELLOW}-x ${BLUE} To ban offending IPs"
    echo 
 
-while getopts ":h?:d?:b?:m?:l?:s?:v?" opt; 
+while getopts ":h?:b?:l?:m?:p?:s?:v?:x?" opt; 
 do
   case "$opt" in
        h) Help
          exit;;
-       d) delete
-         ;;  
        b) bannergen
          ;;
+       l) logreader
+	 ;; 
+       m) nologs
+	 ;;
+       p) parselogs       
+         ;;	 
        s) simple
          ;;
        v) verbose
          ;;
-       m) nologs
-		 ;; 
-       l) logreader
-		 ;; 
+       x) ban
+         ;;
        *) 
          echo ${RED}
          echo "💀 invalid option ./kpots.sh -h for help 💀"
          exit;;
     esac
 done
+echo "${LIGHT_MAGENTA}👋 Thanks for using Kpots 👋"
+if [ -f pots/offending-ips.log ]
+  then
+    rm $DIR/offending-ips.log
+fi
 tput sgr0 

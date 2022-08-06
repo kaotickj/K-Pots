@@ -363,7 +363,27 @@ echo ${BLUE}
 		/sbin/iptables -t filter -I FORWARD -d $ADDR -j REJECT
 		echo "👊 Blocked all connections from $ADDR "
 	      done
+	      echo -ne 'Cleaning up.\n'
+	      sleep 1		
 	      rm $DIR/offending-ips.log
+	      echo -ne 'Cleaning up..\n'
+              mkdir -p $DIR/archive	
+	      echo -ne 'Cleaning up...\n'
+	      echo "${YELLOW}--->Archiving Logs ....."
+	      sleep 1
+	      echo -ne 'Cleaning up....\n'
+	      if [ -f pots/s-mode.log ] || [ -f pots/v-mode.log ]
+	        then
+	          tar -cvzf kpots_logs_$now.tar.gz pots/*.log
+	          echo -ne 'Cleaning up.....\n'
+                  mv kpots_logs_$now.tar.gz $DIR/archive/kpots_logs_$dt.tar.gz
+ 	          echo -ne 'Cleaning up......\n'
+                  rm $DIR/*.log
+	          echo
+	          echo "${GREEN}--->Finished cleanup. Old logs saved to $DIR/archive/kpots_logs_$dt.tar.gz"
+	        else
+	          echo -e ${RED}'---> Nothing to do'     
+	      fi
 	  ;; 
           *)
 	      echo "💀 invalid option ./kpots.sh -h for help 💀"

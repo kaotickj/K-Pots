@@ -77,10 +77,10 @@ logreader()
 	  if [ -f pots/s-mode.log ] || [ -f pots/v-mode.log ]
 	    then
 	      tar -cvzf kpots_logs_$now.tar.gz pots/*.log
-              mv kpots_logs_$now.tar.gz $DIR/archive/kpots_logs_$now.tar.gz
+              mv kpots_logs_$now.tar.gz $DIR/archive/kpots_logs_$dt.tar.gz
               rm $DIR/*.log
 	      echo
-	      echo "${GREEN}--->Finished archiving. Moved to $DIR/archive/kpots_logs_$now.tar.gz"
+	      echo "${GREEN}--->Finished archiving. Saved to $DIR/archive/kpots_logs_$dt.tar.gz"
 	    else
 	      echo -e ${RED}'---> Nothing to do'     
 	  fi
@@ -385,7 +385,7 @@ whoareyou()
       echo "##########################################" > $DIR/whois-$now.log
       echo "# 🦉WHOIS Info for Offending IPS Follows #" >> $DIR/whois-$now.log
       echo "##########################################" >> $DIR/whois-$now.log
-      echo "# Scan time: " $dt>> $DIR/whois-$now.txt	
+      echo "# Scan time: " $dt>> $DIR/whois-$now.log	
       echo "------------------------------------------">>$DIR/whois-$now.log
       echo "" >> $DIR/whois-$now.log
       echo "${BLUE}-----------------------------------------------------"

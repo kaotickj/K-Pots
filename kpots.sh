@@ -7,6 +7,7 @@
 #  VARS
 ###################
 now=$(date +"%m_%d_%Y")
+dt=$(date '+%d-%m-%Y-%H:%M:%S');
 DIR=$(pwd)'/pots'
 PORT=$2 
 
@@ -85,8 +86,11 @@ logreader()
 	  fi
 	;;
 	"Quit")
-	  clear
-	  echo "${YELLOW}Goodbye"
+	  echo "${LIGHT_MAGENTA}     👋   Goodbye, and Thanks for using Kpots   👋"
+#	  if [ -f pots/offending-ips.log ]
+#	    then
+#	      rm $DIR/offending-ips.log
+#	  fi
 	  exit;;
     esac
   done  	
@@ -137,6 +141,11 @@ bannergen()
 	exit	
       ;;
       "Quit")
+	echo "${LIGHT_MAGENTA}     👋   Goodbye, and Thanks for using Kpots   👋"
+#	if [ -f pots/offending-ips.log ]
+#	  then
+#	    rm $DIR/offending-ips.log
+#	fi
 	exit
       ;;  
     esac
@@ -289,21 +298,74 @@ parselogs()
 
 ban()
 {
+echo ${BLUE}
   if [ -f pots/offending-ips.log ]
     then
+    	echo "${RED} ⚠️  STOP! VIEW THE IP LOG AND EDIT OUT ANY IPs ⚠️" 
+    	echo "     YOU DON'T WANT TO BAN BEFORE CONTINUING "
+	tput sgr0 
+	echo ${BLUE}
+	read -n1 -p "View the log first? (n bans all logged IPs) [y,n]" viewem 
+	case $viewem in  
+	  y|Y)
+	     if command -v gedit > /dev/null;
+	       then
+	        gedit pots/offending-ips.log;
+	       else
+	        nano pots/offending-ips.log; 
+             fi
+	     ban
+	  ;; 
+	  n|N)
+	      echo "${BLUE}-----------------------------------------------------"
+	      echo "${BLUE}        🚫     Banning Offending IPs     🚫          "
+	      echo "${BLUE}-----------------------------------------------------"
+	      for i in `cat $DIR/offending-ips.log|grep -v "#"`
+	      do
+		ADDR=$i
+		/sbin/iptables -t filter -I INPUT -s $ADDR -j DROP
+		/sbin/iptables -t filter -I OUTPUT -s $ADDR -j DROP
+		/sbin/iptables -t filter -I FORWARD -s $ADDR -j DROP
+		/sbin/iptables -t filter -I INPUT -d $ADDR -j REJECT
+		/sbin/iptables -t filter -I OUTPUT -d $ADDR -j REJECT
+		/sbin/iptables -t filter -I FORWARD -d $ADDR -j REJECT
+		echo "👊 Blocked all connections from $ADDR "
+	      done
+	      rm $DIR/offending-ips.log
+	  ;; 
+          *)
+	      echo "💀 invalid option ./kpots.sh -h for help 💀"
+          ;; 
+	esac
+    else
+      echo -e ${RED}'---> Nothing to do'     
+  fi
+}
+
+##########################
+# OFFENDING IPS WHOIS
+##########################
+
+whoare()
+{
+  if [ -f pots/offending-ips.log ]
+    then
+      echo "##########################################" > $DIR/whois-$now.log
+      echo "# 🦉WHOIS Info for Offending IPS Follows #" >> $DIR/whois-$now.log
+      echo "##########################################" >> $DIR/whois-$now.log
+      echo "# Scan time: " $dt>> $DIR/whois-$now.txt	
+      echo "------------------------------------------">>$DIR/whois-$now.log
+      echo "" >> $DIR/whois-$now.log
       echo "${BLUE}-----------------------------------------------------"
-      echo "${BLUE}        🚫     Banning Offending IPs     🚫          "
+      echo "${BLUE}        🦉      Offending IPs Whois      🦉          "
       echo "${BLUE}-----------------------------------------------------"
       for i in `cat $DIR/offending-ips.log|grep -v "#"`
       do
         ADDR=$i
-        /sbin/iptables -t filter -I INPUT -s $ADDR -j DROP
-        /sbin/iptables -t filter -I OUTPUT -s $ADDR -j DROP
-        /sbin/iptables -t filter -I FORWARD -s $ADDR -j DROP
-        /sbin/iptables -t filter -I INPUT -d $ADDR -j REJECT
-        /sbin/iptables -t filter -I OUTPUT -d $ADDR -j REJECT
-        /sbin/iptables -t filter -I FORWARD -d $ADDR -j REJECT
-        echo "👊 Blocked all connections from $ADDR "
+        echo "#  WHOIS FOR $ADDR:  " >>$DIR/whois-$now.log
+        echo "##########################################" >> $DIR/whois-$now.log
+	whois $ADDR >> $DIR/whois-$now.log
+        echo "${DG} ---> 🦉 Whois for $ADDR done. Saved to $DIR/whois-$now.log "
       done
     else
       echo -e ${RED}'---> Nothing to do'     
@@ -342,12 +404,13 @@ echo
                  
 echo " ${BLUE}KPots is a simple honeypots system to capture and log traffic to specified ports."
 echo
-   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-b|-l|-m|-p|-s|-v] ${YELLOW}<PORT>"
+   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-b|-H|-l|-m|-p|-s|-v] ${YELLOW}<PORT>"
    echo ${GREEN}
    echo " options:"
    echo " -------------------------------------------"
    echo " ${YELLOW}-h ${BLUE}Show this help message"
    echo " ${YELLOW}-b ${YELLOW}<PORT>${BLUE} Generates a new banner for port specified ."
+   echo " ${YELLOW}-H ${BLUE} Offending IPs Whois"
    echo " ${YELLOW}-l ${BLUE} Read the logs"
    echo " ${YELLOW}-m ${YELLOW}<PORT>${BLUE} Only monitor specified port. No logs"
    echo " ${YELLOW}-p ${BLUE} Parse and sort ip addresses from logs"
@@ -366,7 +429,7 @@ echo
 ################################################################################
 
 [[ `id -u` -eq 0 ]] || { echo -e "${RED}💀 Must run as root (sudo ./ksploit.sh) 💀"; exit 1; }
-#resize -s 30 60
+resize -s 30 60
 clear
 echo "    ${RED} _____  __${LIGHT_MAGENTA} ____       _        "
 echo "    ${RED} ___| |/ /${LIGHT_MAGENTA}|  _ \ ___ | |_ ___  "
@@ -379,12 +442,13 @@ echo
                  
 echo " ${BLUE}KPots is a simple honeypots system to capture and log traffic to specified ports."
 echo
-   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-b|-l|-m|-p|-s|-v] ${YELLOW}<PORT>"
+   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-b|-H|-l|-m|-p|-s|-v] ${YELLOW}<PORT>"
    echo ${GREEN}
    echo " options:"
    echo " -------------------------------------------"
    echo " ${YELLOW}-h ${BLUE}Show this help message"
    echo " ${YELLOW}-b ${YELLOW}<PORT>${BLUE} Generates a new banner for port specified ."
+   echo " ${YELLOW}-H ${BLUE} Offending IPs Whois"
    echo " ${YELLOW}-l ${BLUE} Read the logs"
    echo " ${YELLOW}-m ${YELLOW}<PORT>${BLUE} Only monitor specified port. No logs"
    echo " ${YELLOW}-p ${BLUE} Parse and sort ip addresses from logs"
@@ -393,12 +457,14 @@ echo
    echo " ${YELLOW}-x ${BLUE} To ban offending IPs"
    echo 
 
-while getopts ":h?:b?:l?:m?:p?:s?:v?:x?" opt; 
+while getopts ":h?:b?:H?:l?:m?:p?:s?:v?:x?" opt; 
 do
   case "$opt" in
        h) Help
          exit;;
        b) bannergen
+         ;;
+       H) whoare       
          ;;
        l) logreader
 	 ;; 
@@ -418,9 +484,9 @@ do
          exit;;
     esac
 done
-echo "${LIGHT_MAGENTA}👋 Thanks for using Kpots 👋"
-if [ -f pots/offending-ips.log ]
-  then
-    rm $DIR/offending-ips.log
-fi
+echo "${LIGHT_MAGENTA}     👋   Goodbye, and Thanks for using Kpots   👋"
+#if [ -f pots/offending-ips.log ]
+#  then
+#    rm $DIR/offending-ips.log
+#fi
 tput sgr0 

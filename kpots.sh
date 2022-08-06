@@ -207,8 +207,23 @@ verbose()
   fi
   if [ ! -f pots/$PORT.txt ]
     then 
-      echo "${RED}  💀 You don't have a banner for port $PORT sudo ./kpots.sh -b $PORT to create one. 💀"
-      exit 
+      echo "${RED}  💀 You do not have a banner for port $PORT sudo ./kpots.sh -b $PORT to create one. 💀"
+      echo ${YELLOW}
+      read -n1 -p "Create it now (you can't monitor port $PORT until you do) [y,n]" makeflag
+      case $makeflag in  
+	y|Y)
+	  sudo bash kpots.sh -b $PORT
+	  exit
+	;; 
+	n|N)
+	  echo "${LIGHT_MAGENTA}     👋   Goodbye, and Thanks for using Kpots   👋"
+	  exit
+ 	;;
+        *)
+         echo "💀 invalid option ./kpots.sh -h for help 💀"
+         exit
+        ;; 
+      esac
    else
       echo -e ${YELLOW}'---> Starting ...'     
   fi
@@ -346,7 +361,7 @@ echo ${BLUE}
 # OFFENDING IPS WHOIS
 ##########################
 
-whoare()
+whoareyou()
 {
   if [ -f pots/offending-ips.log ]
     then
@@ -464,7 +479,7 @@ do
          exit;;
        b) bannergen
          ;;
-       H) whoare       
+       H) whoareyou       
          ;;
        l) logreader
 	 ;; 

@@ -12,7 +12,9 @@ DIR=$(pwd)'/pots'
 PORT=$2 
 mkdir -p logs
 LOGDIR=$(pwd)/logs
-MYIP=$(dig @resolver4.opendns.com myip.opendns.com +short -4)
+THISIP=$(dig @resolver4.opendns.com myip.opendns.com +short -4)
+
+####################
 #  COLORS
 ####################
 C=$(printf '\033')
@@ -37,7 +39,26 @@ SED_DG="${C}[1;90m&${C}[0m"
 NC="${C}[0m"
 UNDERLINED="${C}[5m"
 ITALIC="${C}[3m"
-
+if [ -f block-banned.sh ]
+  then
+      echo "${YELLOW}  You have previously banned offenders."
+      read -n1 -p "Do you want to automatically ban them now? [y,n]" banem
+      case $banem in  
+	y|Y)
+	  	sudo ./block-banned.sh
+	  exit
+	;; 
+	n|N)
+#	  mv block-banned.sh $LOGDIR/block-banned.sh
+#	  exit
+ 	;;
+    *)
+     echo ${RED}
+     echo "💀 invalid option ./kpots.sh -h for help 💀"
+     exit
+    ;; 
+  esac
+fi
 ###########################
 #  LOG READER
 ###########################
@@ -250,7 +271,7 @@ verbose()
       touch $DIR/v-mode.log
   fi
   echo "${BLUE}-----------------------------------------------------"
-  echo "${BLUE}          🛑     Auto  Blocking Mode      🛑         "
+  echo "${BLUE}          🚫     Auto  Blocking Mode      🚫         "
   echo "${BLUE}-----------------------------------------------------"
   echo ${LIGHT_MAGENTA}
   if [ -z "${PORT}" ];
@@ -289,7 +310,7 @@ verbose()
       echo "" >> $LOGDIR/whois-v-mode.txt
       for i in `cat $DIR/offending-ips.log|grep -v "#"`
       do
-      if [ ! $i = $MYIP ]
+      if [ ! $i = $THISIP ]
       then	
         ADDR=$i
         echo "#  WHOIS FOR $ADDR:  " >>$LOGDIR/whois-v-mode.txt
@@ -300,7 +321,7 @@ verbose()
       done
       for i in `cat $DIR/offending-ips.log|grep -v "#"`
       do
-      if [ ! $i = $MYIP ]
+      if [ ! $i = $THISIP ]
       then	
 	ADDR=$i
 	/sbin/iptables -t filter -I INPUT -s $ADDR -j DROP
@@ -419,7 +440,7 @@ echo ${BLUE}
 		/sbin/iptables -t filter -I INPUT -d $ADDR -j REJECT
 		/sbin/iptables -t filter -I OUTPUT -d $ADDR -j REJECT
 		/sbin/iptables -t filter -I FORWARD -d $ADDR -j REJECT
-		echo "👊 Blocked all connections from $ADDR "
+		echo "🚫${GREEN} Blocked all connections from ${RED} $ADDR ${DG}"
 	      done
 	      echo -ne 'Cleaning up.\n'
 	      sleep 1		
@@ -457,7 +478,7 @@ echo ${BLUE}
 
 whoareyou()
 {
-#echo $MYIP
+#echo $THISIP
 #sleep 15
   if [ -f pots/offending-ips.log ]
     then
@@ -476,7 +497,7 @@ whoareyou()
         echo "#  WHOIS FOR $ADDR:  " >>$DIR/whois-$now.txt
         echo "##########################################" >> $DIR/whois-$now.txt
 	whois $ADDR >> $DIR/whois-$now.txt
-        echo "${DG} ---> 🦉 Whois for $ADDR done. Saved to $DIR/whois-$now.txt "
+        echo "${GREEN} ---> 🦉 Whois for $ADDR done. Saved to $DIR/whois-$now.txt "
       done
     else
       echo -e ${RED}'---> Nothing to do'     

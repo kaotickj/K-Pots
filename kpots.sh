@@ -9,6 +9,7 @@
 now=$(date +"%m_%d_%Y")
 dt=$(date '+%d-%m-%Y-%H:%M:%S');
 DIR=$(pwd)'/pots'
+TDIR=$(pwd)
 PORT=$2 
 mkdir -p logs
 LOGDIR=$(pwd)/logs
@@ -18,47 +19,32 @@ THISIP=$(dig @resolver4.opendns.com myip.opendns.com +short -4)
 #  COLORS
 ####################
 C=$(printf '\033')
+FGR="${C}[48;5;196m"
 RED="${C}[1;31m"
 SED_RED="${C}[1;31m&${C}[0m"
 GREEN="${C}[1;32m"
+FGG="${C}[48;5;22m"
 SED_GREEN="${C}[1;32m&${C}[0m"
 YELLOW="${C}[1;33m"
 SED_YELLOW="${C}[1;33m&${C}[0m"
 SED_RED_YELLOW="${C}[1;31;103m&${C}[0m"
 BLUE="${C}[1;34m"
+FGB="${C}[48;5;34m"
 SED_BLUE="${C}[1;34m&${C}[0m"
 ITALIC_BLUE="${C}[1;34m${C}[3m"
 LIGHT_MAGENTA="${C}[1;95m"
 SED_LIGHT_MAGENTA="${C}[1;95m&${C}[0m"
 LIGHT_CYAN="${C}[1;96m"
+FGC="${C}[48;5;237m"
 SED_LIGHT_CYAN="${C}[1;96m&${C}[0m"
-LG="${C}[1;37m" #LightGray
+LG="${C}[1;37m"
 SED_LG="${C}[1;37m&${C}[0m"
-DG="${C}[1;90m" #DarkGray
+DG="${C}[1;90m"
 SED_DG="${C}[1;90m&${C}[0m"
 NC="${C}[0m"
 UNDERLINED="${C}[5m"
 ITALIC="${C}[3m"
-if [ -f block-banned.sh ]
-  then
-      echo "${YELLOW}  You have previously banned offenders."
-      read -n1 -p "Do you want to automatically ban them now? [y,n]" banem
-      case $banem in  
-	y|Y)
-	  	sudo ./block-banned.sh
-	  exit
-	;; 
-	n|N)
-#	  mv block-banned.sh $LOGDIR/block-banned.sh
-#	  exit
- 	;;
-    *)
-     echo ${RED}
-     echo "💀 invalid option ./kpots.sh -h for help 💀"
-     exit
-    ;; 
-  esac
-fi
+
 ###########################
 #  LOG READER
 ###########################
@@ -69,7 +55,7 @@ logreader()
   echo "${BLUE}-----------------------------------------------------"
   echo ${LIGHT_MAGENTA}
   PS3="${YELLOW}What do you want to do? (1=View 2=Archives 3=Logs Menu 4=QUIT)" 
-  options=("View Logs" "View Archived" "This Menu" "Quit") #"Logs From Verbose Mode" "Archive Logs" 
+  options=("View Logs" "Archive Logs" "This Menu" "Quit") #"Logs From Verbose Mode" "View Archived" 
   select opt in "${options[@]}"
   do
     case $opt in
@@ -95,7 +81,7 @@ logreader()
 	;;   
 	"Archive Logs")
           mkdir -p $DIR/archive	
-	  echo "${YELLOW}--->Archiving Logs ....."
+	  echo "${YELLOW} --->Archiving Logs ....."
 	  if [ -f pots/s-mode.log ] || [ -f pots/v-mode.log ]
 	    then
 	      tar -cvzf kpots_logs_$now.tar.gz pots/*.log
@@ -149,10 +135,27 @@ bannergen()
 	exit
       ;;
       "Default_Banner")
-        echo "Port $PORT" > $DIR/$PORT.txt
-        echo "Powered by KPots" >> $DIR/$PORT.txt
-        echo "" >> $DIR/$PORT.txt
-        echo "🕵🔎 Courtesy of KaotickJ 👽" >> $DIR/$PORT.txt 
+        echo "              Port $PORT" > $DIR/$PORT.txt
+        echo "          Powered by KPots" >> $DIR/$PORT.txt
+        echo " ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠋⡀⠀⠀⠈⠟⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿" >> $DIR/$PORT.txt
+        echo " ⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⡛⠄⢀⠀⠄⠀⠀⠀⠂⠨⣻⣿⣿⣿⣿⣿⣿⣿⣿" >> $DIR/$PORT.txt
+        echo " ⣿⣿⣿⣿⣿⣿⣿⣿⠋⠂⠀⠂⢀⠈⢂⠈⠀⠀⠀⠀⠈⠙⣿⣿⣿⣿⣿⣿⣿" >> $DIR/$PORT.txt
+        echo " ⣿⣿⣿⣿⡿⠛⠉⠇⢀⣤⣶⣷⡄⠁⡈⠀⣀⣤⣶⡲⡄⠈⣝⡿⣿⣿⣿⣿⣿" >> $DIR/$PORT.txt
+        echo " ⣷⣏⠙⡁⡁⡂⣈⣾⣿⣿⣽⣿⡻⣻⣗⣦⣿⣿⣿⣾⡶⢱⡄⠀⠈⠈⡟⡻⣿" >> $DIR/$PORT.txt
+        echo " ⠧⠉⠀⠀⠅⡄⣸⣿⣿⣿⣿⣿⣿⡿⢾⣿⣿⣿⣯⣏⢞⣯⡙⠀⠀⠀⠀⠐⠠" >> $DIR/$PORT.txt
+        echo " ⠀⠀⡀⠀⣄⠀⢘⣿⣷⣿⡯⣾⢿⢿⣿⡿⣿⣿⣷⣿⣿⣲⠇⠀⠀⠀⠀⠀⣰" >> $DIR/$PORT.txt
+        echo " ⣇⠀⠀⠀⠈⠁⠀⡏⠻⣮⢮⣽⣿⣾⣽⣿⣿⣿⢿⣿⣿⢃⠀⠀⠀⠀⠀⠀⢸" >> $DIR/$PORT.txt
+        echo " ⣏⠀⠀⠀⠀⠀⢀⡿⡏⣸⣿⢿⣿⣿⠿⢿⣏⢧⣼⣿⣿⢉⠀⠀⠀⠀⠀⢀⣸" >> $DIR/$PORT.txt
+        echo " ⣿⡁⠀⠀⠀⠠⣸⢷⣾⠯⣿⢸⣿⣿⣿⣿⣿⠸⣻⣽⣵⡃⠀⡀⠀⠀⢠⣶⣿" >> $DIR/$PORT.txt
+        echo " ⣿⣷⣆⠀⠀⠀⠛⢼⡟⠁⠀⢈⠋⢛⢟⡛⠙⠀⠉⠛⣼⠤⢛⠂⠀⠀⣠⣿⣿" >> $DIR/$PORT.txt
+        echo " ⣿⣿⣿⣶⣆⣀⣷⣽⣷⣶⡄⣀⣤⣾⣯⣥⣈⡁⣠⣾⡵⠠⣦⢀⣤⣾⣿⣿⣿" >> $DIR/$PORT.txt
+        echo " ⣿⣿⣿⣿⣿⣿⣾⡱⡿⢩⡴⢿⠉⠁⠈⠉⢻⢷⣌⢻⠏⣪⣶⣿⣿⣿⣿⣿⣿" >> $DIR/$PORT.txt
+        echo " ⣿⣿⣿⣿⣿⣿⣿⣧⠀⠄⠀⠻⠷⠦⠶⠷⠟⠓⠈⠠⢱⣿⣿⣿⣿⣿⣿⣿⣿" >> $DIR/$PORT.txt
+        echo " ⣿⣿⣿⣿⣿⣿⣿⣿⣆⠘⢟⣆⠀⠠⠐⠂⢠⢧⠇⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿" >> $DIR/$PORT.txt
+        echo " ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⡘⢾⣤⠀⠐⣠⡷⢃⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿" >> $DIR/$PORT.txt
+        echo " ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣯⡝⠛⠛⢋⣵⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿" >> $DIR/$PORT.txt
+        echo "  🎈🎈🎈 yOu'Ll fLoAt tOo! 🎈🎈🎈 " >> $DIR/$PORT.txt
+        echo "    🕵🔎 Courtesy of KaotickJ 👽" >> $DIR/$PORT.txt 
         echo "" >> $DIR/$PORT.txt
         echo "${YELLOW}Finished. Banner for port $PORT set to:${GREEN}"
 	echo
@@ -239,34 +242,7 @@ simple()
 ####################
 verbose()
 {
-  if [ ! -f pots/v-mode.log ]
-    then
-      touch pots/v-mode.log
-  fi
-  if [ ! -f pots/$PORT.txt ]
-    then 
-      echo "${RED}  💀 You do not have a banner for port $PORT sudo ./kpots.sh -b $PORT to create one. 💀"
-      echo ${YELLOW}
-      read -n1 -p "Create it now (you can't monitor port $PORT until you do) [y,n]" makeflag
-      case $makeflag in  
-	y|Y)
-	  sudo bash kpots.sh -b $PORT
-	  verbose
-	;; 
-	n|N)
-	  echo "${LIGHT_MAGENTA}     👋   Goodbye, and Thanks for using KPots   👋"
-	  exit
- 	;;
-        *)
-         echo ${RED}
-         echo "💀 invalid option ./kpots.sh -h for help 💀"
-         exit
-        ;; 
-      esac
-   else
-      echo -e ${YELLOW}'---> Starting ...'     
-  fi
-  if [ ! -f pots/v-mode.log ]
+  if [ ! -f "$DIR/v-mode.log" ]
     then
       touch $DIR/v-mode.log
   fi
@@ -274,16 +250,84 @@ verbose()
   echo "${BLUE}          🚫     Auto  Blocking Mode      🚫         "
   echo "${BLUE}-----------------------------------------------------"
   echo ${LIGHT_MAGENTA}
+	if [ -f kpots.conf ]
+	  then
+	    source kpots.conf
+		if [ "$BLOCKBANNED" = "TRUE" ];
+			then		  
+			  echo "${YELLOW} ---> You have previously banned offenders.${LIGHT_MAGENTA} "
+			  read -n1 -p "Do you want to automatically ban them now? [y,n]" banem
+			  case $banem in  
+			y|Y)
+				echo
+				for i in `cat $LOGDIR/blocked-ips.log|grep -v "#"`
+				do
+				  if [ ! "$i" = "$MYIP" ]
+					then	
+					  ((count++))
+					  ADDR=$i
+					  /sbin/iptables -t filter -I INPUT -s $ADDR -j DROP
+					  /sbin/iptables -t filter -I OUTPUT -s $ADDR -j DROP
+					  /sbin/iptables -t filter -I FORWARD -s $ADDR -j DROP
+					  /sbin/iptables -t filter -I INPUT -d $ADDR -j REJECT
+					  /sbin/iptables -t filter -I OUTPUT -d $ADDR -j REJECT
+					  /sbin/iptables -t filter -I FORWARD -d $ADDR -j REJECT
+					  echo " ---> 🚫${YELLOW} Blocked all connections from ${RED}" $ADDR "${DG}"
+				  fi
+				done
+				echo "${GREEN} ---> Done. Blocked${DG}" $count "${GREEN}offenders."
+			;; 
+			n|N)
+			  echo
+			  echo "${LIGHT_CYAN} ---> Skipped."
+		 	;;
+			*)
+			 echo ${RED}
+			 echo "💀 invalid option ./kpots.sh -h for help 💀"
+			 exit
+			;; 
+		  esac
+		fi
+		if [ "$NEXTASK" = "TRUE" ];
+		  then		  
+                    echo ${LIGHT_MAGENTA}
+	            read -n1 -p "Do you want KPots to ask about previously banned ips next time? [y,n] " banagain
+	            case $banagain in  
+			y|Y)
+				echo "BLOCKBANNED=TRUE" > $TDIR/kpots.conf
+				echo "NEXTASK=$NEXTASK" >> $TDIR/kpots.conf
+				echo
+				echo "${GREEN}Preference saved."
+			;;
+			n|N)
+				echo "BLOCKBANNED=FALSE" > $TDIR/kpots.conf
+				echo "NEXTASK=$NEXTASK" >> $TDIR/kpots.conf
+				echo
+				echo "${GREEN}Preference saved."
+			;;
+			*) 
+				echo ${RED}
+				echo "💀 invalid option ./kpots.sh -h for help 💀"
+				exit
+	    	        ;; 
+		    esac
+		  else
+		    echo -e "${GREEN} ⚙️  Banning prior offenders is disabled. Please edit \"kpots.conf\" to change this behavior. ⚙️ ${NC}"
+		    echo
+		fi
+	fi
   if [ -z "${PORT}" ];
     then	
       read -p 'Set Port # to monitor ' PORT
   fi 
+  echo -e ${YELLOW}' ---> Starting ...'     
   echo -e "${YELLOW}Automatically banning ${RED} All Offenders"
-  echo -e "${GREEN}---> KPot Started on port $PORT $(date)."
+  echo -e "${DG} ---> KPot Started on port $PORT $(date)."
+  echo -e "${GREEN} ---> Running....${DG}(hit ctrl+c twice to stop)"
   while :
     do
       echo "" >$DIR/$PORT.log;
-      sudo nc -lvnp $PORT < $DIR/$PORT.txt 1>>$DIR/$PORT.log 2>>$DIR/$PORT.log;
+      sudo nc -lvnp $PORT < $DIR/port.txt 1>>$DIR/$PORT.log 2>>$DIR/$PORT.log;
       echo $(date) >> $DIR/$PORT.log;
       cat $DIR/$PORT.log | base64 >>$DIR/v-mode.log
       echo
@@ -310,18 +354,18 @@ verbose()
       echo "" >> $LOGDIR/whois-v-mode.txt
       for i in `cat $DIR/offending-ips.log|grep -v "#"`
       do
-      if [ ! $i = $THISIP ]
+      if [ ! "$i" = "$THISIP" ]
       then	
         ADDR=$i
         echo "#  WHOIS FOR $ADDR:  " >>$LOGDIR/whois-v-mode.txt
         echo "##########################################" >> $LOGDIR/whois-v-mode.txt
 	whois $ADDR >> $LOGDIR/whois-v-mode.txt
-        echo "${DG} ---> 🦉 Whois for $ADDR done. Saved to $LOGDIR/whois-v-mode.txt "
+        echo "${LG} ---> 🦉 Whois for $ADDR done. Saved to $LOGDIR/whois-v-mode.txt "
       fi  
       done
       for i in `cat $DIR/offending-ips.log|grep -v "#"`
       do
-      if [ ! $i = $THISIP ]
+      if [ ! "$i" = "$THISIP" ]
       then	
 	ADDR=$i
 	/sbin/iptables -t filter -I INPUT -s $ADDR -j DROP
@@ -333,11 +377,9 @@ verbose()
 	echo $ADDR >> $LOGDIR/blocked-ips.log
 	cat $LOGDIR/blocked-ips.log | sort | uniq >> blocked-ips.log
 	mv blocked-ips.log $LOGDIR/blocked-ips.log
-	echo " ---> 🚫 Blocked all connections from $ADDR "
+	echo " ---> 🚫${YELLOW} Blocked all connections from ${RED}$ADDR "
       fi
       done
-#      sleep 1	
-#      rm $DIR/$PORT.log	
       echo
     fi
     sleep 2
@@ -473,6 +515,55 @@ echo ${BLUE}
 }
 
 ##########################
+# BAN SPECIFIC IPs
+##########################
+bangivenip()
+{
+  
+  ADDR=$PORT
+  echo "${BLUE}-----------------------------------------------------"
+  echo "${BLUE}        🎯     Banning Specific IPs      🎯          "
+  echo "${BLUE}-----------------------------------------------------"
+	if [ -z "${ADDR}" ];
+	  then
+	    echo ${GREEN}	
+		read -p "Enter the ip addy or cidr to block: " ADDR
+	fi
+	/sbin/iptables -t filter -I INPUT -s $ADDR -j DROP
+	/sbin/iptables -t filter -I OUTPUT -s $ADDR -j DROP
+	/sbin/iptables -t filter -I FORWARD -s $ADDR -j DROP
+	/sbin/iptables -t filter -I INPUT -d $ADDR -j REJECT
+	/sbin/iptables -t filter -I OUTPUT -d $ADDR -j REJECT
+	/sbin/iptables -t filter -I FORWARD -d $ADDR -j REJECT
+	echo "${GREEN} ---> 🚫 Blocked all connections from${RED}" $ADDR 
+	echo ${GREEN}
+	read -n1 -p "Save this ip/cidr to blacklist? [y,n]" blacklist
+	case $blacklist in  
+	  y|Y)
+		echo $ADDR >> $LOGDIR/blocked-ips.log
+		cat $LOGDIR/blocked-ips.log | sort | uniq >> blocked-ips.log
+		mv blocked-ips.log $LOGDIR/blocked-ips.log
+		echo
+		echo "${GREEN}  ✅ --->ip/cidr added to blacklist."
+		echo "👋  ${BLUE}G${RED}o${LIGHT_MAGENTA}o${GREEN}d${YELLOW}b${DG}y${LG}e. 👋 "
+		sleep 1
+		exit
+	  ;; 
+	  n|N)
+	  	echo
+		echo "👋  ${BLUE}G${RED}o${LIGHT_MAGENTA}o${GREEN}d${YELLOW}b${DG}y${LG}e. 👋 "
+		sleep 1
+	    exit
+	  ;; 
+      *)
+      echo "💀 invalid option ./kpots.sh -h for help 💀"
+      ;; 
+	esac
+
+	sleep 1
+}
+
+##########################
 # OFFENDING IPS WHOIS
 ##########################
 
@@ -505,18 +596,18 @@ whoareyou()
 }
 
 #########################
-#  DELETE
+# EDIT CONFIG 
 #########################
-#delete()
-#{
-#  if [ -z "${PORT}" ];
-#   then	
-#     read -p #'Set Port # to monitor ' PORT
-# fi 
-# rm $DIR/*.log
-#  sleep 1
-#  echo "${DG}--->$DIR/*.log deleted"
-#}
+editconfig()
+{
+if command -v dit > /dev/null;
+  then
+	gedit kpots.conf;
+  else
+	nano kpots.conf; 
+fi
+  
+}
 
 #########################
 #  HELP
@@ -538,12 +629,13 @@ echo
                  
 echo " ${BLUE}KPots is a simple honeypots system to capture and log traffic to specified ports."
 echo
-   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-b|-H|-l|-m|-p|-s|-v] ${YELLOW}<PORT>"
+   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-b|-B|-H|-l|-m|-p|-s|-v] ${YELLOW}<PORT>"
    echo ${GREEN}
    echo " options:"
    echo " -------------------------------------------"
    echo " ${YELLOW}-h ${BLUE}Show this help message"
    echo " ${YELLOW}-b ${YELLOW}<PORT>${BLUE} Generates a new banner for port specified ."
+   echo " ${YELLOW}-B ${YELLOW}<IPV4>${BLUE} Specify a given ip or cidr to block."
    echo " ${YELLOW}-H ${BLUE} Offending IPs Whois"
    echo " ${YELLOW}-l ${BLUE} Read the logs"
    echo " ${YELLOW}-m ${YELLOW}<PORT>${BLUE} Only monitor specified port. No logs"
@@ -565,6 +657,11 @@ echo
 [[ `id -u` -eq 0 ]] || { echo -e "${RED}💀 Must run as root (sudo ./ksploit.sh) 💀"; exit 1; }
 resize -s 30 60
 clear
+echo ${GREEN}
+#cat $DIR/port.txt
+#sleep 2
+
+clear
 echo "    ${RED} _____  __${LIGHT_MAGENTA} ____       _        "
 echo "    ${RED} ___| |/ /${LIGHT_MAGENTA}|  _ \ ___ | |_ ___  "
 echo "    ${RED} ___| ' / ${LIGHT_MAGENTA}| |_) / _ \| __/ __|"
@@ -576,12 +673,13 @@ echo
                  
 echo " ${BLUE}KPots is a simple honeypots system to capture and log traffic to specified ports."
 echo
-   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-b|-H|-l|-m|-p|-s|-v] ${YELLOW}<PORT>"
+   echo " ${LIGHT_MAGENTA}Syntax: kpots.sh [-h|-b|-B|-H|-l|-m|-p|-s|-v] ${YELLOW}<PORT>"
    echo ${GREEN}
    echo " options:"
    echo " -------------------------------------------"
    echo " ${YELLOW}-h ${BLUE}Show this help message"
    echo " ${YELLOW}-b ${YELLOW}<PORT>${BLUE} Generates a new banner for port specified ."
+   echo " ${YELLOW}-B ${YELLOW}<IPV4>${BLUE} Specify a given ip or cidr to block."
    echo " ${YELLOW}-H ${BLUE} Offending IPs Whois"
    echo " ${YELLOW}-l ${BLUE} Read the logs"
    echo " ${YELLOW}-m ${YELLOW}<PORT>${BLUE} Only monitor specified port. No logs"
@@ -591,13 +689,17 @@ echo
    echo " ${YELLOW}-x ${BLUE} To ban offending IPs"
    echo 
 
-while getopts ":h?:b?:H?:l?:m?:p?:s?:v?:x?" opt; 
+while getopts ":h?:b?:B?:c?:H?:l?:m?:p?:s?:v?:x?" opt; 
 do
   case "$opt" in
        h) Help
          exit;;
        b) bannergen
          ;;
+       B) bangivenip
+         ;;  
+       c) editconfig
+         ;;  
        H) whoareyou       
          ;;
        l) logreader
@@ -744,3 +846,4 @@ tput sgr0
 sleep 5
 exit 
 #}
+
